@@ -1,6 +1,8 @@
 # BDAG NestJS
 
-BDAG NestJS is a toolkit designed to simplify the creation of administrative panels in NestJS applications. It provides a set of decorators and utilities to define DTOs, entities, fields, authentication flows, and more, leveraging metadata to generate and manage complex admin interfaces efficiently.
+**@bdag/nestjs** is a toolkit designed to simplify the creation of administrative dashboards. It provides a set of decorators and utilities for defining DTOs, entities, fields, authentication flows, and more, using metadata to efficiently create and manage complex admin interfaces.
+
+**Important**: This package is part of the @bdag ecosystem
 
 ## Features
 
@@ -131,31 +133,31 @@ export class RefreshService {
 The package includes a CLI for scaffolding and management tasks. After installing globally or locally, you can invoke the CLI:
 
 ```bash
-    npx @bdag/nestjs [command] [options]
+npx @bdag/nestjs [command] [options]
 ```
 
 Use --help with the CLI to get a list of available commands and options:
 
 ```bash
-    npx @bdag/nestjs --help
+npx @bdag/nestjs --help
 ```
 
 ## Building from Source
 If you are interested in building or modifying the package:
 1. Clone the repository:
 ```bash
-    git clone https://github.com/yourusername/bdag-nestjs.git
-  cd bdag-nestjs
+git clone https://github.com/yourusername/bdag-nestjs.git
+cd bdag-nestjs
 ```
 
 2. Install dependencies:
 ```bash
-    npm install
+npm install
 ```
 
 3. Build the package:
 ```bash
-    npm run build
+npm run build
 ```
 
 This will run Rollup to bundle the library, generate a CLI bundle, and create TypeScript declaration files.

@@ -1,7 +1,7 @@
 {
-	"name": "@bdag/nestjs",
+	"name": "bdag-nestjs",
 	"version": "1.0.0",
-	"description": "auxiliary npm package for the Nestis library for defining fields and generating the BDAG config",
+	"description": "is a toolkit designed to simplify the creation of administrative dashboards. It provides a set of decorators and utilities for defining DTOs, entities, fields, authentication flows, and more, using metadata to efficiently create and manage complex admin interfaces.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"files": ["dist"],
