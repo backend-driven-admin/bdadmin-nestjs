@@ -1,0 +1,53 @@
+{
+	"name": "@bdag/nestjs",
+	"version": "1.0.0",
+	"description": "auxiliary npm package for the Nestis library for defining fields and generating the BDAG config",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": ["dist"],
+	"bin": {
+		"@bdag/nestjs": "./dist/cli/main.js"
+	},
+	"scripts": {
+		"build": "rollup -c --bundleConfigAsCjs",
+		"format": "biome format --write .",
+		"lint": "biome lint --write .",
+		"lint:fix": "biome lint --write --unsafe ."
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Backend-driven-Admin-Generator/bdag-nestjs.git"
+	},
+	"keywords": [
+		"bdag",
+		"nestjs",
+		"config",
+		"typescript",
+		"decorators",
+		"json",
+		"restapi"
+	],
+	"author": "Kai Goldman",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Backend-driven-Admin-Generator/bdag-nestjs/issues"
+	},
+	"homepage": "https://github.com/Backend-driven-Admin-Generator/bdag-nestjs#readme",
+	"dependencies": {
+		"reflect-metadata": "^0.2.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@rollup/plugin-commonjs": "^28.0.2",
+		"@rollup/plugin-node-resolve": "^16.0.0",
+		"@rollup/plugin-terser": "^0.4.4",
+		"@rollup/plugin-typescript": "^12.1.2",
+		"@types/node": "^22.10.5",
+		"commander": "^13.0.0",
+		"glob": "^11.0.1",
+		"rollup": "^4.30.1",
+		"rollup-plugin-dts": "^6.1.1",
+		"tslib": "^2.8.1",
+		"typescript": "^5.7.3"
+	}
+}
