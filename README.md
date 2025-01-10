@@ -146,7 +146,7 @@ npx @bdag/nestjs --help
 If you are interested in building or modifying the package:
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/bdag-nestjs.git
+git clone https://github.com/Backend-driven-Admin-Generator/bdag-nestjs
 cd bdag-nestjs
 ```
 
