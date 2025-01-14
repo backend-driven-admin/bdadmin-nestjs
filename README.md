@@ -38,94 +38,113 @@ Make sure to install and configure the following in your project:
 ```
 
 ## Usage
-### Importing Decorators
-Import the necessary decorators from the package to annotate your classes and properties.
+### Define the entities
 
 ```ts
-import { BdagEntity, BdagField, BdagDto, BdagValidation } from '@bdag/nestjs';
+import { BdagEntity, BdagBehavior } from '@bdag/nestjs';
+import { Get } from "@nestjs/common";
 
-// Example: Define an entity with fields and validations
-@BdagEntity({ key: 'user', endpoint: { url: '/api/users', method: 'GET' } })
-export class User {
-    @BdagField({ type: 'string', sort: true, search: true })
-    name: string;
+@Controller("users")
+@BdagEntity({ name: "users" })
+export class UserController {
+    @Get()
+    @BdagBehavior({ 
+        type: [UserController], 
+        endpoint: { 
+            url: "/users", 
+            method: "GET"
+        } 
+    })
+    findAll() { /* ... */ }
+
+    @Post("/create")
+    @BdagBehavior({
+        type: UserCreateDto,
+        endpoint: {
+            url: "/users/create",
+            method: "POST"
+        }
+    })
+    create() { /* ... */ }
     
-    @BdagField({ type: 'number' })
-    age: number;
-    
-    // ...additional properties and methods
+    // ...other methods
 }
 ```
 
-### Configuring DTOs
-Use the `BdagDto` decorator to define Data Transfer Objects linked to entities and configure endpoints, actions, and roles.
+### Configure fields & validation
 
 ```ts
-import { BdagDto } from '@bdag/nestjs';
+import { BdagField, BdagValidation } from '@bdag/nestjs';
 
-@BdagDto({
-  action: {
-    type: "create",
-    endpoint: { url: "/api/users/create", method: "POST" },
-  },
-  entityKey: "user",
-  roles: ["admin"],
-})
-export class CreateUserDto {
-    @BdagValidation({ type: 'string', required: true, min: 3, max: 50 })
+export class UserEntity {
+    @BdagField({ type: 'string', sort: true, search: true })
     name: string;
   
-    @BdagValidation({ type: 'number', required: true })
+    @BdagField({ type: 'number', sort: true })
     age: number;
+    
+    // ...other properties
+}
+
+export class UserCreateDto {
+    @BdagValidation({
+        type: 'string',
+        unique: true,
+        required: true
+    })
+    name: string;
+
+    @BdagValidation({
+        type: 'number',
+        required: true,
+        min: 16,
+        max: 60
+    })
+    age: number;
+
     // ...other properties
 }
 ```
 
-### Authentication Handlers
-Set up login, logout, and refresh handlers using the provided decorators.
+### 
+
+### Initialize authentication
 
 ```ts
-import { BdagLogin, BdagLogout, BdagRefresh, BdagValidation } from '@bdag/nestjs';
+import { BdagAuth, BdagLogin, BdagRefresh, BdagLogout } from '@bdag/nestjs';
 
-@BdagLogin({
-  endpoint: { url: "/login", method: "POST" },
-  response: { accessKey: "access_token", refreshKey: "refresh_token" },
+@BdagAuth({
+    accessKey: "access_token",
+    refreshKey: "refresh_token"
 })
-export class LoginDto {
-    @BdagValidation({
-        type: "string",
-        required: true,
-        min: 8,
+export class AuthController {
+    @Post("/login")
+    @BdagLogin({
+        endpoint: {
+            url: "/login",
+            method: "POST"
+        },
+        type: LoginDto
     })
-    login: string;
+    signIn() { /* ... */ }
 
-    @BdagValidation({
-        type: "string",
-        required: true,
-        min: 8,
+    @Post("/refresh")
+    @BdagRefresh({
+        endpoint: {
+            url: "/refresh",
+            method: "POST"
+        }
     })
-    password: string;
-}
+    refresh() { /* ... */ }
 
-@BdagLogout({
-  endpoint: { url: "/api/auth/logout", method: "POST" },
-})
-export class LogoutDto {
-    @BdagValidation({
-        type: "token",
+    @Post("/logout")
+    @BdagLogout({
+        endpoint: {
+            url: "/logout",
+            method: "POST"
+        }
     })
-    refresh_token: string;
-}
-
-@BdagRefresh({
-  endpoint: { url: "/api/auth/refresh", method: "POST" },
-  response: { refreshKey: "refresh_token" },
-})
-export class RefreshService {
-    @BdagValidation({
-        type: "token",
-    })
-    refresh_token: string;
+    logOut() { /* ... */ }
 }
 ```
 

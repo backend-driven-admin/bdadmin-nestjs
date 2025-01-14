@@ -1,6 +1,6 @@
 {
-	"name": "bdag-nestjs",
-	"version": "1.0.0",
+	"name": "@bdui/nestjs",
+	"version": "1.1.0",
 	"description": "is a toolkit designed to simplify the creation of administrative dashboards. It provides a set of decorators and utilities for defining DTOs, entities, fields, authentication flows, and more, using metadata to efficiently create and manage complex admin interfaces.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -19,7 +19,7 @@
 		"url": "git+https://github.com/Backend-driven-Admin-Generator/bdag-nestjs.git"
 	},
 	"keywords": [
-		"bdag",
+		"bdui",
 		"nestjs",
 		"config",
 		"typescript",
@@ -34,11 +34,13 @@
 	},
 	"homepage": "https://github.com/Backend-driven-Admin-Generator/bdag-nestjs#readme",
 	"dependencies": {
+		"ora": "^8.1.1",
 		"reflect-metadata": "^0.2.2"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
 		"@rollup/plugin-commonjs": "^28.0.2",
+		"@rollup/plugin-json": "^6.1.0",
 		"@rollup/plugin-node-resolve": "^16.0.0",
 		"@rollup/plugin-terser": "^0.4.4",
 		"@rollup/plugin-typescript": "^12.1.2",

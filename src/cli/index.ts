@@ -1,84 +1,102 @@
 import { Command } from "commander";
-import { join } from "node:path";
 import { generateBdagConfigFile } from "./generate-config.command";
 import { globSync } from "glob";
 import { pathToFileURL } from "node:url";
-
-/**
- * BDAG NestJS CLI
- *
- * This CLI tool scans the compiled JavaScript files in the `dist/` directory
- * to find classes decorated with BDAG-specific metadata (entities, DTOs, login/logout, etc.).
- * It then aggregates these classes and generates a BDAG configuration JSON file.
- *
- * Usage Example:
- *   npx bdag-nestjs generate --output bdag.config.json
- *
- * Steps:
- * 1. Use `globSync` to locate all `.js` files in the `dist/` directory (ignoring `dist/main.js`).
- * 2. Dynamically import each file, collecting any exported functions (classes) or objects containing functions.
- * 3. Pass these collected classes to `generateBdagConfigFile` which processes metadata and writes the config.
- */
+import {
+	BDAG_AUTH_METADATA,
+	BDAG_BEHAVIOR_METADATA,
+	BDAG_ENTITY_METADATA,
+} from "../interfaces/bdag-metadata.interface";
+import ora from "ora";
 
 const program = new Command();
 
-program
-	.name("@bdag/nestjs")
-	.description("BDAG NestJS CLI")
-	.version("1.0.0");
+program.name("@bdag/nestjs").description("BDAG NestJS CLI").version("1.0.1");
 
 /**
- * The "generate" command:
- *  - Searches for all `.js` files under `dist/`.
- *  - Dynamically imports each file, gathering classes.
- *  - Generates a JSON configuration file with BDAG metadata.
+ * Command: generate
+ *
+ * This command scans a NestJS project for classes with BDAG-related metadata
+ * (e.g., entities, behaviors, or authentication configurations) and generates a BDAG configuration file.
  */
 program
 	.command("generate")
 	.description("Generate BDAG config in the current NestJS project")
-	.option("-o, --output <path>", "Output file path", "bdag.config.json")
+	.option("-l --local", "Generate only the config file", false)
+	.option(
+		"-n --name <VALUE>",
+		"Name of the directory to place the config",
+		"bdag",
+	)
 	.action(async (opts) => {
+		const loading = ora("Starting to read files").start();
 		try {
-			// 1) Find all compiled *.js files, ignoring dist/main.js
+			// Step 1: Locate all compiled .js files, excluding dist/main.js
 			const jsFiles = globSync("dist/**/*.js", {
-				cwd: process.cwd(),
-				absolute: true,
-				ignore: ["dist/main.js"],
+				cwd: process.cwd(), // Start from the current working directory
+				absolute: true, // Return absolute paths for the files
+				ignore: ["dist/main.js"], // Exclude the main entry file
 			});
 
-			// 2) Dynamically import the files and collect exported classes/functions
+			// Step 2: Dynamically import files and collect relevant classes
 			const classes: Function[] = [];
 			for (const filePath of jsFiles) {
-				const fileUrl = pathToFileURL(filePath).href;
-				const mod = await import(fileUrl);
+				const fileUrl = pathToFileURL(filePath).href; // Convert file path to URL for dynamic import
+				const mod = await import(fileUrl); // Import the module
 
 				for (const exp of Object.values(mod)) {
-					// If the export is a function (commonly a class)
-					if (typeof exp === "function") {
-						classes.push(exp);
-					}
-					// Or if the export is an object containing one or more functions
-					else if (
-						typeof exp === "object" &&
-						exp !== null &&
-						Object.values(exp).some((val) => typeof val === "function")
-					) {
-						for (const val of Object.values(exp)) {
-							if (typeof val === "function") {
-								classes.push(val);
+					// Check if the export is a class
+					if (typeof exp !== "function") continue;
+
+					// Verify if the class has @BdagEntity metadata
+					const hasEntityMetadata = Reflect.hasMetadata(
+						BDAG_ENTITY_METADATA,
+						exp,
+					);
+					const hasAuthMetadata = Reflect.hasMetadata(BDAG_AUTH_METADATA, exp);
+
+					// Check if the class contains at least one method with @BdagBehavior metadata
+					let hasBehavior = false;
+					const prototype = exp.prototype;
+					if (prototype) {
+						const methodNames = Object.getOwnPropertyNames(prototype).filter(
+							(name) =>
+								name !== "constructor" && typeof prototype[name] === "function",
+						);
+
+						for (const methodName of methodNames) {
+							if (
+								Reflect.hasMetadata(
+									BDAG_BEHAVIOR_METADATA,
+									prototype,
+									methodName,
+								)
+							) {
+								hasBehavior = true;
+								break;
 							}
 						}
+					}
+
+					// Add the class to the list if it has relevant metadata
+					if (hasEntityMetadata || hasAuthMetadata || hasBehavior) {
+						classes.push(exp);
 					}
 				}
 			}
 
-			// 3) Generate and write the BDAG config file
-			const outputPath = join(process.cwd(), opts.output);
-			generateBdagConfigFile(classes, outputPath);
+			// Step 3: Generate and write the BDAG configuration file
+			generateBdagConfigFile(
+				classes,
+				loading,
+				opts.local as boolean,
+				opts.name as string,
+			); // Generate the configuration file
 		} catch (err) {
-			console.error("Error while generating BDAG config:", err);
+			// Handle errors during the process
+			loading.fail("Couldn't read files");
 			process.exit(1);
 		}
 	});
 
-program.parse(process.argv);
+program.parse(process.argv); // Parse the command-line arguments

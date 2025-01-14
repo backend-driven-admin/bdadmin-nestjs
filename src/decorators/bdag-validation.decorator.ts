@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import {
 	BDAG_VALIDATIONS_METADATA,
 	type BdagValidationOptions,
@@ -7,16 +6,47 @@ import {
 /**
  * A property decorator that marks a class property for BDAG validation.
  *
- * The decorator collects validation metadata for class properties and stores it using `Reflect.defineMetadata`.
- * Each time it's applied, it retrieves the existing validation metadata for the class, adds the new field's
- * validation rules, and updates the metadata accordingly.
+ * This decorator collects metadata about validation rules for the decorated property and stores it
+ * using `Reflect.defineMetadata`. These validation rules can later be retrieved and used to enforce
+ * constraints during runtime or in administrative configurations.
  *
- * **Important:**
- * 1. Ensure that `reflect-metadata` is imported at the top level of your application.
- * 2. Confirm that `emitDecoratorMetadata` and `experimentalDecorators` are enabled in your `tsconfig.json`.
+ * **Key Points:**
+ * 1. Ensure that `reflect-metadata` is imported at the top level of your application to enable metadata storage.
+ * 2. Enable `emitDecoratorMetadata` and `experimentalDecorators` in your `tsconfig.json`.
+ * 3. Use this decorator to define validation rules, such as required fields, minimum or maximum values, and regex patterns.
  *
- * @param options - The validation configuration options for the property (e.g., required, minLength, maxLength, custom validators, etc.)
- * @returns A PropertyDecorator function that attaches BDAG Validation metadata to the target property.
+ * **Options:**
+ * - `type` (BdagFieldBaseType): Specifies the data type of the property (e.g., `string`, `number`, etc.).
+ * - `min` (number, optional): Defines the minimum value for numeric fields or minimum length for strings.
+ * - `max` (number, optional): Defines the maximum value for numeric fields or maximum length for strings.
+ * - `required` (boolean, optional): Indicates if the field is mandatory.
+ * - `unique` (boolean, optional): Specifies if the field must be unique across the dataset.
+ * - `hidden` (boolean, optional): Determines if the field should be hidden in the UI.
+ * - `disabled` (boolean, optional): Marks the field as read-only.
+ * - `defaultValue` (any, optional): Sets a default value for the field.
+ * - `regex` (RegExp | string, optional): Specifies a regular expression for validating string fields.
+ * - `dataSource` (BdagDataSource, optional): Configures a data source for dropdown or selection fields.
+ *
+ * **Usage Example:**
+ * ```typescript
+ * import { BdagValidation } from '@bdag/nestjs';
+ *
+ * class UserDto {
+ *   @BdagValidation({ type: 'string', required: true, max: 50 })
+ *   username: string;
+ *
+ *   @BdagValidation({ type: 'number', min: 18, max: 65 })
+ *   age: number;
+ * }
+ * ```
+ *
+ * **Behavior:**
+ * - Retrieves existing validation metadata for the class and appends new rules for the decorated property.
+ * - Updates the metadata on the class constructor with the new validation rules.
+ * - The metadata can be accessed dynamically to enforce constraints or generate validation logic.
+ *
+ * @param options - Configuration options for validation rules, including constraints and data type.
+ * @returns A PropertyDecorator function that attaches validation metadata to the target property.
  */
 export function BdagValidation(
 	options: BdagValidationOptions,

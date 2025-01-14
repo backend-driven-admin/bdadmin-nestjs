@@ -1,10 +1,12 @@
 /**
  * Represents the possible actions for a BDAG DTO.
+ * These actions are typically associated with creating, editing, or deleting resources.
  */
 export type BdagDtoActionType = "create" | "edit" | "delete";
 
 /**
  * Represents standard HTTP method types.
+ * These methods are used to define REST API endpoints.
  */
 export type BdagMethodType = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -12,17 +14,18 @@ export type BdagMethodType = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
  * Defines the structure for a REST-API endpoint.
  */
 export interface BdagEndpointType {
-	/** The URL path to the REST-API route */
+	/** The URL path to the REST-API route. */
 	url: string;
-	/** The HTTP method used for the REST-API route */
+	/** The HTTP method used for the REST-API route. */
 	method: BdagMethodType;
 }
 
 /**
- * Base types for BDAG fields, which influence the UI component type.
+ * Base types for BDAG fields, which influence the type of UI component generated.
  */
 export type BdagFieldBaseType =
 	| "string"
+	| "hidden"
 	| "number"
 	| "boolean"
 	| "date"
@@ -34,144 +37,133 @@ export type BdagFieldBaseType =
 	| "token";
 
 /**
- * Options for configuring a BDAG DTO.
+ * Options for configuring a BDAG Logout handler.
+ * This handler defines how logout operations are processed in the application.
  */
-export interface BdagDtoOptions {
-	/**
-	 * Action configuration for the DTO, including type and associated endpoint.
-	 * - `type`: Specifies the type of DTO action (create, edit, delete).
-	 * - `endpoint`: Details of the REST-API route associated with this action.
-	 */
-	action: {
-		type: BdagDtoActionType;
-		endpoint: BdagEndpointType;
-	};
-	/** The key that links this DTO to a specific entity */
-	entityKey: string;
-	/** Optional array of roles required to access this DTO */
-	roles?: string[];
+export interface BdagLogoutOptions {
+	/** Endpoint information for logout operations. */
+	endpoint: BdagEndpointType;
 }
 
 /**
- * Options for configuring a BDAG Logout handler.
+ * Configuration options for BDAG authentication.
+ * Defines the access and refresh token keys used in authentication flows.
  */
-export interface BdagLogoutOptions {
-	/** Endpoint information for logout operations */
-	endpoint: BdagEndpointType;
+export interface BdagAuthOptions {
+	/** The key for the access token in the response payload. */
+	accessKey: string;
+	/** The key for the refresh token in the response payload. */
+	refreshKey: string;
 }
 
 /**
  * Options for configuring a BDAG Login handler.
- * Extends logout options by specifying response tokens.
+ * Extends logout options by specifying additional details about the data type.
  */
 export interface BdagLoginOptions extends BdagLogoutOptions {
-	/**
-	 * Response configuration indicating the keys for access and refresh tokens.
-	 */
-	response: {
-		accessKey: string;
-		refreshKey: string;
-	};
+	/** The input or output data type(s) associated with this login handler. */
+	type: Function | [Function];
 }
 
 /**
  * Options for configuring a BDAG Refresh handler.
- * Extends logout options by specifying response token.
+ * Extends logout options to handle token refresh operations.
  */
 export interface BdagRefreshOptions extends BdagLogoutOptions {
-	/**
-	 * Response configuration indicating the key for the refresh token.
-	 */
-	response: {
-		refreshKey: string;
-	};
+	// No additional fields are required for now, but it uses the same structure as logout options.
 }
 
 /**
  * Options for configuring a BDAG Entity.
+ * An entity represents a resource that can be managed or used in administrative tools.
  */
 export interface BdagEntityOptions {
-	/** Unique key identifying the entity */
-	key: string;
-	/** Endpoint information associated with this entity */
+	/** A unique name identifying the entity. */
+	name: string;
+}
+
+/**
+ * Options for configuring a BDAG DTO behavior.
+ * Defines the endpoint and data type for specific operations such as CRUD actions.
+ */
+export interface BdagBehaviorOptions {
+	/** The input or output data type(s) associated with this behavior. */
+	type: Function | [Function];
+	/** The API endpoint configuration for the behavior. */
 	endpoint: BdagEndpointType;
-	/** Optional array of roles required to access this entity */
-	roles?: string[];
 }
 
 /**
  * Defines the data source for a BDAG field.
- * It can either be local data or fetched via an API.
+ * Fields can fetch data from an API or use static local data.
  */
 export interface BdagDataSource {
-	/** Indicates the type of data source: API-based or local data */
+	/** Indicates the type of data source: API-based or local data. */
 	type: "api" | "local";
-	/** If using an API, configuration details for fetching entity data */
+	/** API configuration for fetching data. */
 	api?: {
-		/** The key of the entity to fetch data for */
+		/** The key of the entity to fetch data for. */
 		entityKey: string;
-		/**
-		 * Fields to include in the API response.
-		 * If only one field is provided, an array of values is returned instead of an array of objects.
-		 */
+		/** Fields to include in the API response. */
 		fields: Array<string>;
 	};
-	/** If using local data, an array of data items */
+	/** Local data for static options. */
 	local?: Array<any>;
 }
 
 /**
  * Options for configuring validation on a BDAG field.
+ * Provides rules for ensuring data integrity and formatting.
  */
 export interface BdagValidationOptions {
-	/** The base type of the field, which influences UI component type */
+	/** The base type of the field, which influences the UI component type. */
 	type: BdagFieldBaseType;
-	/** Minimum length for a string or minimum value for a number */
+	/** Minimum length for a string or minimum value for a number. */
 	min?: number;
-	/** Maximum length for a string or maximum value for a number */
+	/** Maximum length for a string or maximum value for a number. */
 	max?: number;
-	/** Indicates whether the field is required */
+	/** Indicates whether the field is required. */
 	required?: boolean;
-	/** Indicates whether the field must be unique */
+	/** Indicates whether the field must be unique. */
 	unique?: boolean;
-	/** Whether to hide the field in the UI */
+	/** Whether to hide the field in the UI. */
 	hidden?: boolean;
-	/** Makes the field read-only when set to true */
+	/** Makes the field read-only when set to true. */
 	disabled?: boolean;
-	/** Default value for the field */
+	/** Default value for the field. */
 	defaultValue?: any;
-	/** Regular expression or string pattern for validating string fields */
+	/** Regular expression or string pattern for validating string fields. */
 	regex?: RegExp | string;
-	/**
-	 * Data source for dynamic select fields.
-	 * Provides options for fields such as dropdowns where selections come from a data set.
-	 */
+	/** Data source for fields like dropdowns where selections come from a dataset. */
 	dataSource?: BdagDataSource;
 }
 
 /**
  * Options for configuring a BDAG field.
+ * Fields represent individual properties of entities that can be displayed or edited.
  */
 export interface BdagFieldOptions {
-	/** The base type of the field, which influences UI component type */
+	/** The base type of the field, which influences the UI component type. */
 	type: BdagFieldBaseType;
-	/** Whether sorting should be enabled for this field */
+	/** Whether sorting should be enabled for this field. */
 	sort?: boolean;
-	/** Whether search functionality should be enabled for this field */
+	/** Whether search functionality should be enabled for this field. */
 	search?: boolean;
 }
 
-/** Metadata key for BDAG DTO configuration */
-export const BDAG_DTO_METADATA = "BDAG_DTO_METADATA";
-/** Metadata key for BDAG Entity configuration */
+/** Metadata key for BDAG BEHAVIOR configuration. */
+export const BDAG_BEHAVIOR_METADATA = "BDAG_BEHAVIOR_METADATA";
+/** Metadata key for BDAG Entity configuration. */
 export const BDAG_ENTITY_METADATA = "BDAG_ENTITY_METADATA";
-/** Metadata key for BDAG Validation configuration */
+/** Metadata key for BDAG Validation configuration. */
 export const BDAG_VALIDATIONS_METADATA = "BDAG_VALIDATIONS_METADATA";
-/** Metadata key for BDAG Fields configuration */
+/** Metadata key for BDAG Fields configuration. */
 export const BDAG_FIELDS_METADATA = "BDAG_FIELDS_METADATA";
-/** Metadata key for BDAG Login configuration */
+/** Metadata key for BDAG Login configuration. */
 export const BDAG_LOGIN_METADATA = "BDAG_LOGIN_METADATA";
-/** Metadata key for BDAG Logout configuration */
+/** Metadata key for BDAG Logout configuration. */
 export const BDAG_LOGOUT_METADATA = "BDAG_LOGOUT_METADATA";
-/** Metadata key for BDAG Refresh configuration */
+/** Metadata key for BDAG Refresh configuration. */
 export const BDAG_REFRESH_METADATA = "BDAG_REFRESH_METADATA";
+/** Metadata key for BDAG AUTH configuration. */
+export const BDAG_AUTH_METADATA = "BDAG_AUTH_METADATA";

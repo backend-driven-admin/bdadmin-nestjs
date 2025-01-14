@@ -1,25 +1,50 @@
-import "reflect-metadata";
 import {
 	BDAG_LOGIN_METADATA,
 	type BdagLoginOptions,
 } from "../interfaces/bdag-metadata.interface";
 
 /**
- * A class decorator that marks the target class as a BDAG Login handler.
+ * A method decorator that marks the target method as a BDAG Login handler.
  *
- * The decorator stores login-related metadata using `Reflect.defineMetadata`.
- * This metadata can later be used, for instance, to configure authentication flows.
+ * This decorator attaches metadata to methods responsible for user login operations.
+ * It is used to define the endpoint, data type, and related configurations required
+ * to handle authentication flows dynamically.
  *
- * **Important:**
- * 1. Ensure that the decorated login method returns both `access_token` and `refresh_token`.
- * 2. Confirm that `reflect-metadata` is imported at the top level of your application.
- * 3. Ensure that `emitDecoratorMetadata` and `experimentalDecorators` are enabled in your `tsconfig.json`.
+ * **Key Points:**
+ * 1. Ensure that the decorated login method correctly returns `access_token` and `refresh_token`.
+ * 2. Import `reflect-metadata` at the top level of your application to enable metadata storage.
+ * 3. Enable `emitDecoratorMetadata` and `experimentalDecorators` in your `tsconfig.json`.
  *
- * @param options - The login configuration options (e.g., token expiration times, user roles, etc.)
- * @returns A ClassDecorator function that attaches BDAG Login metadata to the target class.
+ * **Options:**
+ * - `type` (Function | [Function]): Specifies the input or output data type(s) associated with the login handler.
+ * - `endpoint` (BdagEndpointType): Defines the API endpoint for the login process, including URL and HTTP method.
+ *
+ * **Usage Example:**
+ * ```typescript
+ * import { BdagLogin } from '@bdag/nestjs';
+ * import { LoginDto } from './dto/login.dto';
+ *
+ * class AuthController {
+ *   @BdagLogin({
+ *     type: LoginDto,
+ *     endpoint: { url: '/auth/login', method: 'POST' },
+ *   })
+ *   login() {
+ *     // Authentication logic
+ *   }
+ * }
+ * ```
+ *
+ * **Behavior:**
+ * - Metadata is stored on the target method using `Reflect.defineMetadata`.
+ * - The metadata can be used at runtime to dynamically configure login endpoints or generate API documentation.
+ *
+ * @param options - Configuration options for the login handler, such as endpoint details and data types.
+ * @returns A MethodDecorator function that attaches BDAG Login metadata to the target method.
  */
-export function BdagLogin(options: BdagLoginOptions): ClassDecorator {
-	return (target) => {
-		Reflect.defineMetadata(BDAG_LOGIN_METADATA, options, target);
+export function BdagLogin(options: BdagLoginOptions): MethodDecorator {
+	return (target, propertyKey, descriptor) => {
+		Reflect.defineMetadata(BDAG_LOGIN_METADATA, options, target, propertyKey);
+		return descriptor;
 	};
 }
