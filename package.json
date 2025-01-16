@@ -1,6 +1,6 @@
 {
 	"name": "@bdadmin/nestjs",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "is a toolkit designed to simplify the creation of administrative dashboards. It provides a set of decorators and utilities for defining DTOs, entities, fields, authentication flows, and more, using metadata to efficiently create and manage complex admin interfaces.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -16,23 +16,27 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Backend-driven-Admin-Generator/bdadmin-nestjs.git"
+		"url": "git+https://github.com/backend-driven-admin/bdadmin-nestjs.git"
 	},
 	"keywords": [
 		"bdui",
+		"bdadmin",
+		"admin",
+		"generator",
 		"nestjs",
 		"config",
 		"typescript",
 		"decorators",
 		"json",
-		"restapi"
+		"restapi",
+		"reflect-metadata"
 	],
 	"author": "Kai Goldman",
-	"license": "ISC",
+	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/Backend-driven-Admin-Generator/bdadmin-nestjs/issues"
+		"url": "https://github.com/backend-driven-admin/bdadmin-nestjs/issues"
 	},
-	"homepage": "https://github.com/Backend-driven-Admin-Generator/bdadmin-nestjs#readme",
+	"homepage": "https://github.com/backend-driven-admin/bdadmin-nestjs#readme",
 	"dependencies": {
 		"ora": "^8.1.1"
 	},
