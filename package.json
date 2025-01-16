@@ -1,12 +1,12 @@
 {
 	"name": "@bdadmin/nestjs",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "is a toolkit designed to simplify the creation of administrative dashboards. It provides a set of decorators and utilities for defining DTOs, entities, fields, authentication flows, and more, using metadata to efficiently create and manage complex admin interfaces.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"files": ["dist"],
 	"bin": {
-		"@bdadmin/nestjs": "./dist/cli/main.js"
+		"cli": "./dist/cli/main.js"
 	},
 	"scripts": {
 		"build": "rollup -c --bundleConfigAsCjs",
@@ -34,7 +34,9 @@
 	},
 	"homepage": "https://github.com/Backend-driven-Admin-Generator/bdadmin-nestjs#readme",
 	"dependencies": {
-		"ora": "^8.1.1",
+		"ora": "^8.1.1"
+	},
+	"peerDependencies": {
 		"reflect-metadata": "^0.2.2"
 	},
 	"devDependencies": {

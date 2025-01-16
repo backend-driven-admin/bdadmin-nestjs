@@ -14,10 +14,10 @@ export default defineConfig([
 	{
 		// Main library bundle configuration
 		input: "src/index.ts",
+		external: ["reflect-metadata"],
 		output: {
 			file: packageJson.main, // Output file path from package.json "main" field
 			format: "cjs", // Output format: CommonJS
-			sourcemap: true, // Generate sourcemap for debugging
 		},
 		plugins: [
 			json(), // Ora package required
@@ -32,10 +32,10 @@ export default defineConfig([
 	{
 		// Separate bundle configuration for the CLI entry point
 		input: "src/cli/index.ts",
+		external: ["reflect-metadata"],
 		output: {
-			file: packageJson.bin["@bdadmin/nestjs"], // Output path from package.json "bin" field
+			file: packageJson.bin.cli, // Output path from package.json "bin" field
 			format: "cjs", // Output format: CommonJS
-			sourcemap: true, // Generate sourcemap for debugging
 			banner: "#!/usr/bin/env node", // Shebang to ensure Node executes the CLI correctly
 		},
 		plugins: [

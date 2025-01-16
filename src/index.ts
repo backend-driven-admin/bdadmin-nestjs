@@ -10,4 +10,3 @@ export * from "./decorators/bdadmin-refresh.decorator";
 export * from "./decorators/bdadmin-auth.decorator";
 
 export * from "./interfaces/bdadmin-metadata.interface";
-export * from "./cli/generate-config.command";
