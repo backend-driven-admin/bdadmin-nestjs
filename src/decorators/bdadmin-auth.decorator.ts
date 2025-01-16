@@ -1,10 +1,10 @@
 import {
-	BDAG_AUTH_METADATA,
-	type BdagAuthOptions,
-} from "../interfaces/bdag-metadata.interface";
+	BDADMIN_AUTH_METADATA,
+	type BdAdminAuthOptions,
+} from "../interfaces/bdadmin-metadata.interface";
 
 /**
- * A class decorator that marks the target class as a BDAG Authentication handler.
+ * A class decorator that marks the target class as a BDADMIN Authentication handler.
  *
  * This decorator is used to attach authentication-related metadata, including access and refresh token keys,
  * to a target class. This metadata can later be utilized to configure authentication flows or middleware.
@@ -20,9 +20,9 @@ import {
  *
  * **Usage Example:**
  * ```typescript
- * import { BdagAuth } from '@bdag/nestjs';
+ * import { BdAdminAuth } from '@bdadmin/nestjs';
  *
- * @BdagAuth({
+ * @BdAdminAuth({
  *   accessKey: 'access_token',
  *   refreshKey: 'refresh_token',
  * })
@@ -32,10 +32,10 @@ import {
  * ```
  *
  * @param options - Configuration options for the authentication handler, including token keys.
- * @returns A ClassDecorator function that attaches BDAG Authentication metadata to the target class.
+ * @returns A ClassDecorator function that attaches BDADMIN Authentication metadata to the target class.
  */
-export function BdagAuth(options: BdagAuthOptions): ClassDecorator {
+export function BdAdminAuth(options: BdAdminAuthOptions): ClassDecorator {
 	return (target) => {
-		Reflect.defineMetadata(BDAG_AUTH_METADATA, options, target);
+		Reflect.defineMetadata(BDADMIN_AUTH_METADATA, options, target);
 	};
 }

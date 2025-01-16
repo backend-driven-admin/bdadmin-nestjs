@@ -1,15 +1,15 @@
-# BDAG NestJS
+# BDAdmin NestJS
 
-**@bdag/nestjs** is a toolkit designed to simplify the creation of administrative dashboards. It provides a set of decorators and utilities for defining DTOs, entities, fields, authentication flows, and more, using metadata to efficiently create and manage complex admin interfaces.
+**@bdadmin/nestjs** is a toolkit designed to simplify the creation of administrative dashboards. It provides a set of decorators and utilities for defining DTOs, entities, fields, authentication flows, and more, using metadata to efficiently create and manage complex admin interfaces.
 
-**Important**: This package is part of the @bdag ecosystem
+**Important**: This package is part of the @bdadmin ecosystem
 
 ## Features
 
 - **Decorators**: Easily annotate classes and properties with metadata for DTOs, entities, validation rules, login/logout/refresh handlers, and more.
 - **Metadata Management**: Utilizes `reflect-metadata` to store and retrieve configuration data.
 - **Type Safety**: Built with TypeScript to ensure type safety and improved developer experience.
-- **CLI Support**: Includes a CLI tool for scaffolding and managing BDAG components within your NestJS project.
+- **CLI Support**: Includes a CLI tool for scaffolding and managing BDAdmin components within your NestJS project.
 - **Rollup Bundling**: Packaged and optimized using Rollup, with TypeScript declaration support for seamless integration.
 
 ## Installation
@@ -17,7 +17,7 @@
 Install the package via npm:
 
 ```bash
-npm install @bdag/nestjs
+npm install @bdadmin/nestjs
 ```
 
 ## Peer Dependencies
@@ -41,14 +41,14 @@ Make sure to install and configure the following in your project:
 ### Define the entities
 
 ```ts
-import { BdagEntity, BdagBehavior } from '@bdag/nestjs';
+import { BDAdminEntity, BDAdminBehavior } from '@bdadmin/nestjs';
 import { Get } from "@nestjs/common";
 
 @Controller("users")
-@BdagEntity({ name: "users" })
+@BDAdminEntity({ name: "users" })
 export class UserController {
     @Get()
-    @BdagBehavior({ 
+    @BDAdminBehavior({ 
         type: [UserController], 
         endpoint: { 
             url: "/users", 
@@ -58,7 +58,7 @@ export class UserController {
     findAll() { /* ... */ }
 
     @Post("/create")
-    @BdagBehavior({
+    @BDAdminBehavior({
         type: UserCreateDto,
         endpoint: {
             url: "/users/create",
@@ -74,27 +74,27 @@ export class UserController {
 ### Configure fields & validation
 
 ```ts
-import { BdagField, BdagValidation } from '@bdag/nestjs';
+import { BDAdminField, BDAdminValidation } from '@bdadmin/nestjs';
 
 export class UserEntity {
-    @BdagField({ type: 'string', sort: true, search: true })
+    @BDAdminField({ type: 'string', sort: true, search: true })
     name: string;
   
-    @BdagField({ type: 'number', sort: true })
+    @BDAdminField({ type: 'number', sort: true })
     age: number;
     
     // ...other properties
 }
 
 export class UserCreateDto {
-    @BdagValidation({
+    @BDAdminValidation({
         type: 'string',
         unique: true,
         required: true
     })
     name: string;
 
-    @BdagValidation({
+    @BDAdminValidation({
         type: 'number',
         required: true,
         min: 16,
@@ -111,15 +111,15 @@ export class UserCreateDto {
 ### Initialize authentication
 
 ```ts
-import { BdagAuth, BdagLogin, BdagRefresh, BdagLogout } from '@bdag/nestjs';
+import { BDAdminAuth, BDAdminLogin, BDAdminRefresh, BDAdminLogout } from '@bdadmin/nestjs';
 
-@BdagAuth({
+@BDAdminAuth({
     accessKey: "access_token",
     refreshKey: "refresh_token"
 })
 export class AuthController {
     @Post("/login")
-    @BdagLogin({
+    @BDAdminLogin({
         endpoint: {
             url: "/login",
             method: "POST"
@@ -129,7 +129,7 @@ export class AuthController {
     signIn() { /* ... */ }
 
     @Post("/refresh")
-    @BdagRefresh({
+    @BDAdminRefresh({
         endpoint: {
             url: "/refresh",
             method: "POST"
@@ -138,7 +138,7 @@ export class AuthController {
     refresh() { /* ... */ }
 
     @Post("/logout")
-    @BdagLogout({
+    @BDAdminLogout({
         endpoint: {
             url: "/logout",
             method: "POST"
@@ -152,21 +152,21 @@ export class AuthController {
 The package includes a CLI for scaffolding and management tasks. After installing globally or locally, you can invoke the CLI:
 
 ```bash
-npx @bdag/nestjs [command] [options]
+npx @bdadmin/nestjs [command] [options]
 ```
 
 Use --help with the CLI to get a list of available commands and options:
 
 ```bash
-npx @bdag/nestjs --help
+npx @bdadmin/nestjs --help
 ```
 
 ## Building from Source
 If you are interested in building or modifying the package:
 1. Clone the repository:
 ```bash
-git clone https://github.com/Backend-driven-Admin-Generator/bdag-nestjs
-cd bdag-nestjs
+git clone https://github.com/backend-driven-admin/bdadmin-nestjs
+cd bdadmin-nestjs
 ```
 
 2. Install dependencies:

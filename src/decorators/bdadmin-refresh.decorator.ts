@@ -1,10 +1,10 @@
 import {
-	BDAG_REFRESH_METADATA,
-	type BdagRefreshOptions,
-} from "../interfaces/bdag-metadata.interface";
+	BDADMIN_REFRESH_METADATA,
+	type BdAdminRefreshOptions,
+} from "../interfaces/bdadmin-metadata.interface";
 
 /**
- * A method decorator that marks the target method as a BDAG Refresh handler.
+ * A method decorator that marks the target method as a BDADMIN Refresh handler.
  *
  * This decorator attaches metadata to methods responsible for handling token refresh operations.
  * It allows configuration of refresh endpoints and related strategies, such as token rotation policies
@@ -16,14 +16,14 @@ import {
  * 3. Enable `emitDecoratorMetadata` and `experimentalDecorators` in your `tsconfig.json`.
  *
  * **Options:**
- * - `endpoint` (BdagEndpointType): Defines the API endpoint for the refresh process, including URL and HTTP method.
+ * - `endpoint` (BdAdminEndpointType): Defines the API endpoint for the refresh process, including URL and HTTP method.
  *
  * **Usage Example:**
  * ```typescript
- * import { BdagRefresh } from '@bdag/nestjs';
+ * import { BdAdminRefresh } from '@bdadmin/nestjs';
  *
  * class AuthController {
- *   @BdagRefresh({
+ *   @BdAdminRefresh({
  *     endpoint: { url: '/auth/refresh', method: 'POST' },
  *   })
  *   refreshToken() {
@@ -37,11 +37,18 @@ import {
  * - The metadata can be used at runtime to dynamically configure token refresh endpoints or integrate with authentication flows.
  *
  * @param options - Configuration options for the refresh handler, including endpoint details.
- * @returns A MethodDecorator function that attaches BDAG Refresh metadata to the target method.
+ * @returns A MethodDecorator function that attaches BDADMIN Refresh metadata to the target method.
  */
-export function BdagRefresh(options: BdagRefreshOptions): MethodDecorator {
+export function BdAdminRefresh(
+	options: BdAdminRefreshOptions,
+): MethodDecorator {
 	return (target, propertyKey, descriptor) => {
-		Reflect.defineMetadata(BDAG_REFRESH_METADATA, options, target, propertyKey);
+		Reflect.defineMetadata(
+			BDADMIN_REFRESH_METADATA,
+			options,
+			target,
+			propertyKey,
+		);
 		return descriptor;
 	};
 }

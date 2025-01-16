@@ -1,13 +1,13 @@
 import "reflect-metadata";
 
-export * from "./decorators/bdag-entity.decorator";
-export * from "./decorators/bdag-behavior.decorator";
-export * from "./decorators/bdag-validation.decorator";
-export * from "./decorators/bdag-field.decorator";
-export * from "./decorators/bdag-login.decorator";
-export * from "./decorators/bdag-logout.decorator";
-export * from "./decorators/bdag-refresh.decorator";
-export * from "./decorators/bdag-auth.decorator";
+export * from "./decorators/bdadmin-entity.decorator";
+export * from "./decorators/bdadmin-behavior.decorator";
+export * from "./decorators/bdadmin-validation.decorator";
+export * from "./decorators/bdadmin-field.decorator";
+export * from "./decorators/bdadmin-login.decorator";
+export * from "./decorators/bdadmin-logout.decorator";
+export * from "./decorators/bdadmin-refresh.decorator";
+export * from "./decorators/bdadmin-auth.decorator";
 
-export * from "./interfaces/bdag-metadata.interface";
+export * from "./interfaces/bdadmin-metadata.interface";
 export * from "./cli/generate-config.command";

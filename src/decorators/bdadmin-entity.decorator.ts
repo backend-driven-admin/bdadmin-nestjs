@@ -1,12 +1,12 @@
 import {
-	BDAG_ENTITY_METADATA,
-	type BdagEntityOptions,
-} from "../interfaces/bdag-metadata.interface";
+	BDADMIN_ENTITY_METADATA,
+	type BdAdminEntityOptions,
+} from "../interfaces/bdadmin-metadata.interface";
 
 /**
- * A class decorator that marks the target class as a BDAG Entity.
+ * A class decorator that marks the target class as a BDADMIN Entity.
  *
- * This decorator attaches metadata to the class, designating it as an entity in the BDAG ecosystem.
+ * This decorator attaches metadata to the class, designating it as an entity in the BDADMIN ecosystem.
  * Entities are used for administrative panel generators, configuration tools, and dynamic API handling.
  * The metadata includes a unique name for the entity and can be extended to include additional configuration options.
  *
@@ -20,9 +20,9 @@ import {
  *
  * **Usage Example:**
  * ```typescript
- * import { BdagEntity } from '@bdag/nestjs';
+ * import { BdAdminEntity } from '@bdadmin/nestjs';
  *
- * @BdagEntity({
+ * @BdAdminEntity({
  *   name: "users"
  * })
  * export class UserController {
@@ -35,10 +35,10 @@ import {
  * - The metadata can be retrieved at runtime to generate dynamic configurations or integrate with external systems.
  *
  * @param options - Configuration options for the entity, including a unique name.
- * @returns A ClassDecorator function that attaches BDAG Entity metadata to the target class.
+ * @returns A ClassDecorator function that attaches BDADMIN Entity metadata to the target class.
  */
-export function BdagEntity(options: BdagEntityOptions): ClassDecorator {
+export function BdAdminEntity(options: BdAdminEntityOptions): ClassDecorator {
 	return (target) => {
-		Reflect.defineMetadata(BDAG_ENTITY_METADATA, options, target);
+		Reflect.defineMetadata(BDADMIN_ENTITY_METADATA, options, target);
 	};
 }

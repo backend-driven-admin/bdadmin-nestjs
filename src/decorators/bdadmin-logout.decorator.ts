@@ -1,10 +1,10 @@
 import {
-	BDAG_LOGOUT_METADATA,
-	type BdagLogoutOptions,
-} from "../interfaces/bdag-metadata.interface";
+	BDADMIN_LOGOUT_METADATA,
+	type BdAdminLogoutOptions,
+} from "../interfaces/bdadmin-metadata.interface";
 
 /**
- * A method decorator that marks the target method as a BDAG Logout handler.
+ * A method decorator that marks the target method as a BDADMIN Logout handler.
  *
  * This decorator attaches metadata to methods responsible for handling user logout processes.
  * It allows configuration of logout endpoints and related strategies, such as token invalidation
@@ -16,14 +16,14 @@ import {
  * 3. Enable `emitDecoratorMetadata` and `experimentalDecorators` in your `tsconfig.json`.
  *
  * **Options:**
- * - `endpoint` (BdagEndpointType): Defines the API endpoint for the logout process, including URL and HTTP method.
+ * - `endpoint` (BdAdminEndpointType): Defines the API endpoint for the logout process, including URL and HTTP method.
  *
  * **Usage Example:**
  * ```typescript
- * import { BdagLogout } from '@bdag/nestjs';
+ * import { BdAdminLogout } from '@bdadmin/nestjs';
  *
  * class AuthController {
- *   @BdagLogout({
+ *   @BdAdminLogout({
  *     endpoint: { url: '/auth/logout', method: 'POST' },
  *   })
  *   logout() {
@@ -37,11 +37,16 @@ import {
  * - The metadata can be used at runtime to dynamically configure logout endpoints or integrate with authentication flows.
  *
  * @param options - Configuration options for the logout handler, including endpoint details.
- * @returns A MethodDecorator function that attaches BDAG Logout metadata to the target method.
+ * @returns A MethodDecorator function that attaches BDADMIN Logout metadata to the target method.
  */
-export function BdagLogout(options: BdagLogoutOptions): MethodDecorator {
+export function BdAdminLogout(options: BdAdminLogoutOptions): MethodDecorator {
 	return (target, propertyKey, descriptor) => {
-		Reflect.defineMetadata(BDAG_LOGOUT_METADATA, options, target, propertyKey);
+		Reflect.defineMetadata(
+			BDADMIN_LOGOUT_METADATA,
+			options,
+			target,
+			propertyKey,
+		);
 		return descriptor;
 	};
 }

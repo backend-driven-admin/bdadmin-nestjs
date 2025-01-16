@@ -1,10 +1,10 @@
 import {
-	BDAG_BEHAVIOR_METADATA,
-	type BdagBehaviorOptions,
-} from "../interfaces/bdag-metadata.interface";
+	BDADMIN_BEHAVIOR_METADATA,
+	type BdAdminBehaviorOptions,
+} from "../interfaces/bdadmin-metadata.interface";
 
 /**
- * A method decorator that marks the target method as a BDAG behavior.
+ * A method decorator that marks the target method as a BDADMIN behavior.
  *
  * This decorator is used to define and attach metadata to methods representing specific behaviors,
  * such as REST API actions (e.g., `GET`, `POST`, `PUT`) linked to entities or data types. These behaviors
@@ -17,15 +17,15 @@ import {
  *
  * **Options:**
  * - `type` (Function | [Function]): Specifies the data type(s) related to the behavior, such as input or output types.
- * - `method` (BdagMethodType): Defines the HTTP method (e.g., `GET`, `POST`, etc.) for the behavior.
+ * - `method` (BdAdminMethodType): Defines the HTTP method (e.g., `GET`, `POST`, etc.) for the behavior.
  *
  * **Usage Example:**
  * ```typescript
- * import { BdagBehavior } from '@bdag/nestjs';
+ * import { BdAdminBehavior } from '@bdadmin/nestjs';
  * import { User } from './user.entity';
  *
  * class UserController {
- *   @BdagBehavior({ type: [User], endpoint: { url: "/users", method: "GET" } })
+ *   @BdAdminBehavior({ type: [User], endpoint: { url: "/users", method: "GET" } })
  *   getAll() {
  *     // Logic for fetching a users
  *   }
@@ -39,10 +39,12 @@ import {
  * @param options - Configuration options for the behavior, including HTTP method and data type.
  * @returns A MethodDecorator function that attaches the behavior metadata to the target method.
  */
-export function BdagBehavior(options: BdagBehaviorOptions): MethodDecorator {
+export function BdAdminBehavior(
+	options: BdAdminBehaviorOptions,
+): MethodDecorator {
 	return (target, propertyKey, descriptor) => {
 		Reflect.defineMetadata(
-			BDAG_BEHAVIOR_METADATA,
+			BDADMIN_BEHAVIOR_METADATA,
 			options,
 			target,
 			propertyKey,

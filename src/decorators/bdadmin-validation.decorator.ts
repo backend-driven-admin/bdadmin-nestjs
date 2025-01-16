@@ -1,10 +1,10 @@
 import {
-	BDAG_VALIDATIONS_METADATA,
-	type BdagValidationOptions,
-} from "../interfaces/bdag-metadata.interface";
+	BDADMIN_VALIDATIONS_METADATA,
+	type BdAdminValidationOptions,
+} from "../interfaces/bdadmin-metadata.interface";
 
 /**
- * A property decorator that marks a class property for BDAG validation.
+ * A property decorator that marks a class property for BDADMIN validation.
  *
  * This decorator collects metadata about validation rules for the decorated property and stores it
  * using `Reflect.defineMetadata`. These validation rules can later be retrieved and used to enforce
@@ -16,7 +16,7 @@ import {
  * 3. Use this decorator to define validation rules, such as required fields, minimum or maximum values, and regex patterns.
  *
  * **Options:**
- * - `type` (BdagFieldBaseType): Specifies the data type of the property (e.g., `string`, `number`, etc.).
+ * - `type` (BdAdminFieldBaseType): Specifies the data type of the property (e.g., `string`, `number`, etc.).
  * - `min` (number, optional): Defines the minimum value for numeric fields or minimum length for strings.
  * - `max` (number, optional): Defines the maximum value for numeric fields or maximum length for strings.
  * - `required` (boolean, optional): Indicates if the field is mandatory.
@@ -25,17 +25,17 @@ import {
  * - `disabled` (boolean, optional): Marks the field as read-only.
  * - `defaultValue` (any, optional): Sets a default value for the field.
  * - `regex` (RegExp | string, optional): Specifies a regular expression for validating string fields.
- * - `dataSource` (BdagDataSource, optional): Configures a data source for dropdown or selection fields.
+ * - `dataSource` (BdAdminDataSource, optional): Configures a data source for dropdown or selection fields.
  *
  * **Usage Example:**
  * ```typescript
- * import { BdagValidation } from '@bdag/nestjs';
+ * import { BdAdminValidation } from '@bdadmin/nestjs';
  *
  * class UserDto {
- *   @BdagValidation({ type: 'string', required: true, max: 50 })
+ *   @BdAdminValidation({ type: 'string', required: true, max: 50 })
  *   username: string;
  *
- *   @BdagValidation({ type: 'number', min: 18, max: 65 })
+ *   @BdAdminValidation({ type: 'number', min: 18, max: 65 })
  *   age: number;
  * }
  * ```
@@ -48,13 +48,14 @@ import {
  * @param options - Configuration options for validation rules, including constraints and data type.
  * @returns A PropertyDecorator function that attaches validation metadata to the target property.
  */
-export function BdagValidation(
-	options: BdagValidationOptions,
+export function BdAdminValidation(
+	options: BdAdminValidationOptions,
 ): PropertyDecorator {
 	return (target, key) => {
 		// Retrieve the array of existing validated fields for the target class, if any
 		const existingFields =
-			Reflect.getMetadata(BDAG_VALIDATIONS_METADATA, target.constructor) || [];
+			Reflect.getMetadata(BDADMIN_VALIDATIONS_METADATA, target.constructor) ||
+			[];
 
 		// Add the new field validation description to the array
 		existingFields.push({
@@ -64,7 +65,7 @@ export function BdagValidation(
 
 		// Update the metadata on the target class with the new array of validations
 		Reflect.defineMetadata(
-			BDAG_VALIDATIONS_METADATA,
+			BDADMIN_VALIDATIONS_METADATA,
 			existingFields,
 			target.constructor,
 		);

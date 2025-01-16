@@ -1,32 +1,35 @@
 import { Command } from "commander";
-import { generateBdagConfigFile } from "./generate-config.command";
+import { generateBdAdminConfigFile } from "./generate-config.command";
 import { globSync } from "glob";
 import { pathToFileURL } from "node:url";
 import {
-	BDAG_AUTH_METADATA,
-	BDAG_BEHAVIOR_METADATA,
-	BDAG_ENTITY_METADATA,
-} from "../interfaces/bdag-metadata.interface";
+	BDADMIN_AUTH_METADATA,
+	BDADMIN_BEHAVIOR_METADATA,
+	BDADMIN_ENTITY_METADATA,
+} from "../interfaces/bdadmin-metadata.interface";
 import ora from "ora";
 
 const program = new Command();
 
-program.name("@bdag/nestjs").description("BDAG NestJS CLI").version("1.0.1");
+program
+	.name("@bdadmin/nestjs")
+	.description("BDADMIN NestJS CLI")
+	.version("1.0.1");
 
 /**
  * Command: generate
  *
- * This command scans a NestJS project for classes with BDAG-related metadata
- * (e.g., entities, behaviors, or authentication configurations) and generates a BDAG configuration file.
+ * This command scans a NestJS project for classes with BDADMIN-related metadata
+ * (e.g., entities, behaviors, or authentication configurations) and generates a BDADMIN configuration file.
  */
 program
 	.command("generate")
-	.description("Generate BDAG config in the current NestJS project")
+	.description("Generate BDADMIN config in the current NestJS project")
 	.option("-l --local", "Generate only the config file", false)
 	.option(
 		"-n --name <VALUE>",
 		"Name of the directory to place the config",
-		"bdag",
+		"bdadmin",
 	)
 	.action(async (opts) => {
 		const loading = ora("Starting to read files").start();
@@ -48,14 +51,17 @@ program
 					// Check if the export is a class
 					if (typeof exp !== "function") continue;
 
-					// Verify if the class has @BdagEntity metadata
+					// Verify if the class has @BdAdminEntity metadata
 					const hasEntityMetadata = Reflect.hasMetadata(
-						BDAG_ENTITY_METADATA,
+						BDADMIN_ENTITY_METADATA,
 						exp,
 					);
-					const hasAuthMetadata = Reflect.hasMetadata(BDAG_AUTH_METADATA, exp);
+					const hasAuthMetadata = Reflect.hasMetadata(
+						BDADMIN_AUTH_METADATA,
+						exp,
+					);
 
-					// Check if the class contains at least one method with @BdagBehavior metadata
+					// Check if the class contains at least one method with @BdAdminBehavior metadata
 					let hasBehavior = false;
 					const prototype = exp.prototype;
 					if (prototype) {
@@ -67,7 +73,7 @@ program
 						for (const methodName of methodNames) {
 							if (
 								Reflect.hasMetadata(
-									BDAG_BEHAVIOR_METADATA,
+									BDADMIN_BEHAVIOR_METADATA,
 									prototype,
 									methodName,
 								)
@@ -85,14 +91,14 @@ program
 				}
 			}
 
-			// Step 3: Generate and write the BDAG configuration file
-			generateBdagConfigFile(
+			// Step 3: Generate and write the BDADMIN configuration file
+			generateBdAdminConfigFile(
 				classes,
 				loading,
 				opts.local as boolean,
 				opts.name as string,
 			); // Generate the configuration file
-		} catch (err) {
+		} catch (error) {
 			// Handle errors during the process
 			loading.fail("Couldn't read files");
 			process.exit(1);

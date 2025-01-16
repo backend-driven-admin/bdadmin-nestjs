@@ -1,10 +1,10 @@
 import {
-	BDAG_FIELDS_METADATA,
-	type BdagFieldOptions,
-} from "../interfaces/bdag-metadata.interface";
+	BDADMIN_FIELDS_METADATA,
+	type BdAdminFieldOptions,
+} from "../interfaces/bdadmin-metadata.interface";
 
 /**
- * A property decorator that marks a class property as a BDAG Field.
+ * A property decorator that marks a class property as a BDADMIN Field.
  *
  * This decorator collects metadata for the decorated property, such as its type,
  * visibility, and behavior, and stores it using `Reflect.defineMetadata`.
@@ -17,19 +17,19 @@ import {
  * 3. Use this decorator to define attributes of fields, such as their type, searchability, and sortability.
  *
  * **Options:**
- * - `type` (BdagFieldBaseType): Specifies the base type of the field (e.g., `string`, `number`, `boolean`, etc.).
+ * - `type` (BdAdminFieldBaseType): Specifies the base type of the field (e.g., `string`, `number`, `boolean`, etc.).
  * - `sort` (boolean, optional): Indicates if the field is sortable in lists or tables.
  * - `search` (boolean, optional): Indicates if the field is searchable in administrative tools.
  *
  * **Usage Example:**
  * ```typescript
- * import { BdagField } from '@bdag/nestjs';
+ * import { BdAdminField } from '@bdadmin/nestjs';
  *
  * class UserEntity {
- *   @BdagField({ type: 'string', sort: true, search: true })
+ *   @BdAdminField({ type: 'string', sort: true, search: true })
  *   name: string;
  *
- *   @BdagField({ type: 'number', sort: true })
+ *   @BdAdminField({ type: 'number', sort: true })
  *   age: number;
  * }
  * ```
@@ -42,11 +42,11 @@ import {
  * @param options - Configuration options for the field.
  * @returns A PropertyDecorator function that attaches field metadata to the class property.
  */
-export function BdagField(options: BdagFieldOptions): PropertyDecorator {
+export function BdAdminField(options: BdAdminFieldOptions): PropertyDecorator {
 	return (target, key) => {
 		// Retrieve the array of existing fields for the target class, if any
 		const existingFields =
-			Reflect.getMetadata(BDAG_FIELDS_METADATA, target.constructor) || [];
+			Reflect.getMetadata(BDADMIN_FIELDS_METADATA, target.constructor) || [];
 
 		// Add the new field description to the array
 		existingFields.push({
@@ -56,7 +56,7 @@ export function BdagField(options: BdagFieldOptions): PropertyDecorator {
 
 		// Update the metadata on the target class with the new array of fields
 		Reflect.defineMetadata(
-			BDAG_FIELDS_METADATA,
+			BDADMIN_FIELDS_METADATA,
 			existingFields,
 			target.constructor,
 		);
