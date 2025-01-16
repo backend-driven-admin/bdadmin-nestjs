@@ -1,10 +1,4 @@
 /**
- * Represents the possible actions for a BDADMIN DTO.
- * These actions are typically associated with creating, editing, or deleting resources.
- */
-export type BdAdminDtoActionType = "create" | "edit" | "delete";
-
-/**
  * Represents standard HTTP method types.
  * These methods are used to define REST API endpoints.
  */

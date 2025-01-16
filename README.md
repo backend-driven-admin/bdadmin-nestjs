@@ -1,4 +1,4 @@
-# BDAdmin NestJS
+# Backend-driven Admin - NestJS Module
 
 **@bdadmin/nestjs** is a toolkit designed to simplify the creation of administrative dashboards. It provides a set of decorators and utilities for defining DTOs, entities, fields, authentication flows, and more, using metadata to efficiently create and manage complex admin interfaces.
 
@@ -161,6 +161,22 @@ Use --help with the CLI to get a list of available commands and options:
 npx @bdadmin/nestjs --help
 ```
 
+### Example
+#### Generate a REST route with a config
+```bash
+npx @bdadmin/nestjs generate
+```
+
+#### Generate a local config
+```bash
+npx @bdadmin/nestjs generate --local
+```
+
+#### Generate a REST route with a config and a custom name
+```bash
+npx @bdadmin/nestjs generate --name config
+```
+
 ## Building from Source
 If you are interested in building or modifying the package:
 1. Clone the repository:
@@ -185,4 +201,4 @@ This will run Rollup to bundle the library, generate a CLI bundle, and create Ty
 Contributions are welcome! Please open issues for any bugs or feature requests. Follow the repository guidelines for pull requests.
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/backend-driven-admin/bdadmin-nestjs/blob/main/LICENSE) file for details.
