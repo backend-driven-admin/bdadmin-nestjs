@@ -1,0 +1,10 @@
+import { Controller, Get } from '@nestjs/common';
+import * as config from './config/config.json';
+
+@Controller('{{name}}')
+export class {{ControllerClass}} {
+  @Get('config')
+  getConfig() {
+    return config;
+  }
+}

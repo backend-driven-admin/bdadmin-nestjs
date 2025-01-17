@@ -1,12 +1,12 @@
 {
 	"name": "@bdadmin/nestjs",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "is a toolkit designed to simplify the creation of administrative dashboards. It provides a set of decorators and utilities for defining DTOs, entities, fields, authentication flows, and more, using metadata to efficiently create and manage complex admin interfaces.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"files": ["dist"],
 	"bin": {
-		"@bdadmin/nestjs": "./dist/cli/main.js"
+		"@bdadmin/nestjs": "dist/cli/index.js"
 	},
 	"scripts": {
 		"build": "rollup -c --bundleConfigAsCjs",
@@ -55,7 +55,9 @@
 		"commander": "^13.0.0",
 		"glob": "^11.0.1",
 		"rollup": "^4.30.1",
+		"rollup-plugin-copy": "^3.5.0",
 		"rollup-plugin-dts": "^6.1.1",
+		"ts-morph": "^25.0.0",
 		"tslib": "^2.8.1",
 		"typescript": "^5.7.3"
 	},

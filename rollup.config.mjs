@@ -6,6 +6,7 @@ import { defineConfig } from "rollup";
 import terser from "@rollup/plugin-terser";
 import { dts } from "rollup-plugin-dts";
 import json from "@rollup/plugin-json";
+import copy from "rollup-plugin-copy";
 
 const packageJson = require("./package.json");
 
@@ -26,6 +27,14 @@ export default defineConfig([
 			typescript({
 				outputToFilesystem: true, // Emit compiled files to the filesystem
 			}),
+			copy({
+				targets: [
+					{
+						src: "src/templates",
+						dest: "dist",
+					},
+				],
+			}), // Copy file templates
 			terser(), // Minify the output bundle
 		],
 	},
@@ -34,7 +43,7 @@ export default defineConfig([
 		input: "src/cli/index.ts",
 		external: ["reflect-metadata"],
 		output: {
-			file: packageJson.bin.cli, // Output path from package.json "bin" field
+			file: packageJson.bin[packageJson.name], // Output path from package.json "bin" field
 			format: "cjs", // Output format: CommonJS
 			banner: "#!/usr/bin/env node", // Shebang to ensure Node executes the CLI correctly
 		},

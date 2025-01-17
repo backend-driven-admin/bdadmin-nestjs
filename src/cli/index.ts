@@ -2,6 +2,7 @@ import { Command } from "commander";
 import { generateBdAdminConfigFile } from "./generate-config.command";
 import { globSync } from "glob";
 import { pathToFileURL } from "node:url";
+import packageJson from "../../package.json";
 import {
 	BDADMIN_AUTH_METADATA,
 	BDADMIN_BEHAVIOR_METADATA,
@@ -12,9 +13,9 @@ import ora from "ora";
 const program = new Command();
 
 program
-	.name("@bdadmin/nestjs")
-	.description("BDADMIN NestJS CLI")
-	.version("1.0.1");
+	.name(packageJson.name)
+	.description(packageJson.description)
+	.version(packageJson.version);
 
 /**
  * Command: generate
@@ -32,7 +33,7 @@ program
 		"bdadmin",
 	)
 	.action(async (opts) => {
-		const loading = ora("Starting to read files").start();
+		const state = ora("Starting to read files").start();
 		try {
 			// Step 1: Locate all compiled .js files, excluding dist/main.js
 			const jsFiles = globSync("dist/**/*.js", {
@@ -94,13 +95,13 @@ program
 			// Step 3: Generate and write the BDADMIN configuration file
 			generateBdAdminConfigFile(
 				classes,
-				loading,
+				state,
 				opts.local as boolean,
 				opts.name as string,
 			); // Generate the configuration file
 		} catch (error) {
 			// Handle errors during the process
-			loading.fail("Couldn't read files");
+			state.fail("Couldn't read files");
 			process.exit(1);
 		}
 	});

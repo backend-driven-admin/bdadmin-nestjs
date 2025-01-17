@@ -21,6 +21,7 @@ import {
 import { join } from "node:path";
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
 import type { Ora } from "ora";
+import renderTemplate from "../utils/renderTemplate";
 
 /**
  * BDADMIN Configuration Type.
@@ -276,10 +277,10 @@ export function generateBdAdminConfig(
  *
  * @param jsonStr - The JSON string of the BDADMIN configuration.
  * @param name - The name of the directory and module (e.g., "bdadmin").
- * @param loading
+ * @param state - Ora instance
  */
-function createBdAdminDirectory(jsonStr: string, name: string, loading: Ora) {
-	loading.start("Creating a directory");
+function createBdAdminDirectory(jsonStr: string, name: string, state: Ora) {
+	state.start("Creating a directory");
 	try {
 		const bdadminDir = join(process.cwd(), "src", name);
 		const configDirPath = join(bdadminDir, "config");
@@ -296,14 +297,20 @@ function createBdAdminDirectory(jsonStr: string, name: string, loading: Ora) {
 		const configFilePath = join(configDirPath, "config.json");
 		writeFileSync(configFilePath, jsonStr, "utf-8");
 
-		// Create the module file
-		const moduleContent = `import { Module } from '@nestjs/common';
-import { ${capitalizeFirstLetter(name)}Controller } from './${name}.controller';
+		const data = {
+			name,
+			ModuleClass: `${capitalizeFirstLetter(name)}Module`,
+			ControllerClass: `${capitalizeFirstLetter(name)}Controller`,
+		};
 
-@Module({
-  controllers: [${capitalizeFirstLetter(name)}Controller],
-})
-export class ${capitalizeFirstLetter(name)}Module {}`;
+		// Create the module file
+		const moduleTemplatePath = join(
+			__dirname,
+			"../templates",
+			"bdadmin.module.ts.template",
+		);
+		const moduleTemplate = readFileSync(moduleTemplatePath, "utf-8");
+		const moduleContent = renderTemplate(moduleTemplate, data);
 		writeFileSync(
 			join(bdadminDir, `${name}.module.ts`),
 			moduleContent,
@@ -311,16 +318,13 @@ export class ${capitalizeFirstLetter(name)}Module {}`;
 		);
 
 		// Create the controller file
-		const controllerContent = `import { Controller, Get } from '@nestjs/common';
-import * as config from './config/config.json';
-
-@Controller('${name}')
-export class ${capitalizeFirstLetter(name)}Controller {
-  @Get('config')
-  getConfig() {
-    return config;
-  }
-}`;
+		const controllerTemplatePath = join(
+			__dirname,
+			"../templates",
+			"bdadmin.controller.ts.template",
+		);
+		const controllerTemplate = readFileSync(controllerTemplatePath, "utf-8");
+		const controllerContent = renderTemplate(controllerTemplate, data);
 		writeFileSync(
 			join(bdadminDir, `${name}.controller.ts`),
 			controllerContent,
@@ -328,9 +332,10 @@ export class ${capitalizeFirstLetter(name)}Controller {
 		);
 
 		// Update the AppModule
-		updateAppModule(name, loading);
+		updateAppModule(name, state);
 	} catch (error) {
-		loading.fail("Error when creating a directory");
+		console.log(error);
+		state.fail("Error when creating a directory");
 		process.exit(1);
 	}
 }
@@ -344,10 +349,10 @@ export class ${capitalizeFirstLetter(name)}Controller {
  * 3. Adds the import statement and updates the `imports` array if necessary.
  *
  * @param name - The name of the module to add (e.g., "bdadmin").
- * @param loading
+ * @param state - Ora instance
  */
-function updateAppModule(name: string, loading: Ora) {
-	loading.start("Updating the app.module.ts");
+function updateAppModule(name: string, state: Ora) {
+	state.start("Updating the app.module.ts");
 	try {
 		const appModulePath = join(process.cwd(), "src", "app.module.ts");
 		const appModuleContent = readFileSync(appModulePath, "utf-8");
@@ -365,11 +370,11 @@ function updateAppModule(name: string, loading: Ora) {
 
 			writeFileSync(appModulePath, updatedContent, "utf-8");
 		}
-		loading.succeed(
+		state.succeed(
 			`The config was successfully generated on the path /src/${name}`,
 		);
 	} catch (error) {
-		loading.fail("Couldn't update app.module.ts");
+		state.fail("Couldn't update app.module.ts");
 		process.exit(1);
 	}
 }
@@ -383,34 +388,34 @@ function updateAppModule(name: string, loading: Ora) {
  * 3. Writes the configuration to a file or creates a full BDADMIN module.
  *
  * @param classes - An array of classes to process for BDADMIN metadata.
- * @param loading
+ * @param state - Ora instance
  * @param isLocal - Whether to generate only the configuration file locally (true) or create a full module (false).
  * @param name - The name of the directory and module for the generated files.
  */
 export function generateBdAdminConfigFile(
 	classes: Function[],
-	loading: Ora,
+	state: Ora,
 	isLocal: boolean,
 	name: string,
 ) {
-	const config = generateBdAdminConfig(classes, loading);
+	const config = generateBdAdminConfig(classes, state);
 	const jsonStr = JSON.stringify(config, null, 2);
 
 	if (isLocal) {
 		// Write only the config file
-		loading.start("Generating a local config");
+		state.start("Generating a local config");
 		try {
 			const outputPath = join(process.cwd(), "bdadmin.config.json");
 			writeFileSync(outputPath, jsonStr, "utf-8");
-			loading.succeed(
+			state.succeed(
 				`The config was successfully generated on the path ${outputPath}`,
 			);
 		} catch (error) {
-			loading.fail("Couldn't generate a local config");
+			state.fail("Couldn't generate a local config");
 			process.exit(1);
 		}
 	} else {
 		// Create the BDADMIN directory structure and files
-		createBdAdminDirectory(jsonStr, name, loading);
+		createBdAdminDirectory(jsonStr, name, state);
 	}
 }

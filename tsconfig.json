@@ -9,8 +9,7 @@
 		"isolatedModules": true,
 		"moduleResolution": "bundler",
 		"useDefineForClassFields": true,
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true
+		"resolveJsonModule": true
 	},
 	"include": ["src/**/*"],
 	"exclude": ["node_modules", "dist"]
