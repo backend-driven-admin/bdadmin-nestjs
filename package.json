@@ -1,10 +1,12 @@
 {
 	"name": "@bdadmin/nestjs",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"description": "is a toolkit designed to simplify the creation of administrative dashboards. It provides a set of decorators and utilities for defining DTOs, entities, fields, authentication flows, and more, using metadata to efficiently create and manage complex admin interfaces.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"bin": {
 		"@bdadmin/nestjs": "dist/cli/index.js"
 	},
